@@ -1,0 +1,1 @@
+export const USER_WITH_SUCH_EMAIL_ALREADY_EXISTS_MSG = 'User with such email already exists';
