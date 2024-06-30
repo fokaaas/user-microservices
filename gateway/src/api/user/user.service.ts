@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { USERS } from '../../globals/constnts';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponse } from './responses/user.response';
-import { Observable } from 'rxjs';
+import { USER_CREATED_MSG } from './constants';
+import { MessageResponse } from './responses/message.response';
 
 @Injectable()
 export class UserService {
@@ -12,8 +12,9 @@ export class UserService {
     private readonly userClient: ClientProxy,
   ) {}
 
-  async createUser (data: CreateUserDto): Promise<Observable<UserResponse>> {
-    const pattern = { cmd: 'user_create' };
-    return this.userClient.send<UserResponse>(pattern, data);
+  createUser (data: CreateUserDto): MessageResponse {
+    const pattern = 'create-user';
+    this.userClient.emit(pattern, data);
+    return { message: USER_CREATED_MSG };
   }
 }

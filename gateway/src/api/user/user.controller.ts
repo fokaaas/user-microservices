@@ -1,10 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponse } from './responses/user.response';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
 import { ErrorWithValidationsResponse } from '../../globals/responses/error-with-validations.response';
+import { MessageResponse } from './responses/message.response';
 
 @ApiTags('User')
 @Controller({
@@ -17,15 +16,15 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create user' })
-  @ApiCreatedResponse({ type: UserResponse })
+  @ApiCreatedResponse({ type: MessageResponse })
   @ApiBadRequestResponse({
     type: ErrorWithValidationsResponse,
     description: `
       Invalid request data`,
   })
-  async create (
+  create (
     @Body() data: CreateUserDto,
-  ): Promise<Observable<UserResponse>> {
+  ): MessageResponse {
     return this.userService.createUser(data);
   }
 }
