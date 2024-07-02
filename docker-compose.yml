@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  db:
+    image: postgres:13
+    restart: always
+    env_file:
+      - ./.docker.env
+    ports:
+      - "4002:5432"
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+  gateway:
+    build:
+      context: ./gateway
+    restart: always
+    ports:
+      - "4455:4455"
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./.docker.env
+
+  users:
+    build:
+      context: ./users
+    restart: always
+    depends_on:
+      - rabbitmq
+      - gateway
+      - db
+    env_file:
+      - ./.docker.env
+
+  notifications:
+    build:
+      context: ./notifications
+    restart: always
+    depends_on:
+      - rabbitmq
+      - gateway
+      - redis
+    env_file:
+      - ./.docker.env

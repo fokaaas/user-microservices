@@ -26,6 +26,6 @@ async function bootstrap () {
   const configService = app.get<ConfigService>(ConfigService);
   const port = configService.get<number>('port');
 
-  await app.listen(port, () => console.info(`Gateway API started on PORT: ${port}`));
+  await app.listen(port, '0.0.0.0', () => console.info(`Gateway API started on PORT: ${port}`));
 }
 bootstrap();
